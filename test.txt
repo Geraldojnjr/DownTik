@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  dotnet-app:
+    image: mcr.microsoft.com/dotnet/sdk:8.0-arm64 # SDK para desenvolvimento
+    container_name: dotnet_app
+    working_dir: /app
+    volumes:
+      - .:/app  # Monta o diretório local no contêiner
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    environment:
+      - DOTNET_RUNNING_IN_CONTAINER=true
+      - ASPNETCORE_URLS=http://+:5000
+    command: ["dotnet", "watch", "run"] # Para desenvolvimento
+
+  dotnet-runtime:
+    image: mcr.microsoft.com/dotnet/aspnet:8.0-arm64 # Apenas runtime para produção
+    container_name: dotnet_runtime
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    environment:
+      - DOTNET_RUNNING_IN_CONTAINER=true
+      - ASPNETCORE_URLS=http://+:5000
+    command: ["dotnet", "NomeDoSeuProjeto.dll"] # Para produção
+
+
+
